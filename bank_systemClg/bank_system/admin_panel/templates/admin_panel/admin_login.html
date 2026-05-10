@@ -1,0 +1,192 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login | UNI Bank</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+    body {
+        margin: 0;
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        font-family: 'Segoe UI', sans-serif;
+        color: #e2e8f0;
+    }
+
+    /* glow accents */
+    .bg-glow::before,
+    .bg-glow::after {
+        content: "";
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(120px);
+        opacity: 0.25;
+        z-index: 0;
+    }
+
+    .bg-glow::before {
+        width: 400px;
+        height: 400px;
+        background: #2563eb;
+        top: -100px;
+        left: -100px;
+    }
+
+    .bg-glow::after {
+        width: 350px;
+        height: 350px;
+        background: #7c3aed;
+        bottom: -100px;
+        right: -100px;
+    }
+
+    /* card */
+    .admin-card {
+        background: rgba(30, 41, 59, 0.85);
+        border-radius: 18px;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        backdrop-filter: blur(12px);
+        z-index: 2;
+        position: relative;
+    }
+
+    /* header */
+    .admin-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(148,163,184,0.2);
+        text-align: center;
+    }
+
+    .admin-header h5 {
+        margin: 0;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .admin-sub {
+        font-size: 13px;
+        color: #94a3b8;
+    }
+
+    /* body */
+    .admin-body {
+        padding: 25px;
+    }
+
+    .form-control {
+        background: #0f172a;
+        border: 1px solid #334155;
+        color: #e2e8f0;
+    }
+
+    .form-control:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37,99,235,0.3);
+    }
+
+    .form-label {
+        font-size: 14px;
+        color: #cbd5f5;
+    }
+
+    /* button */
+    .btn-admin {
+        background: #2563eb;
+        border: none;
+        font-weight: 500;
+    }
+
+    .btn-admin:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    /* error */
+    .error-box {
+        background: rgba(248,113,113,0.15);
+        color: #fca5a5;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    /* footer */
+    .admin-footer {
+        font-size: 12px;
+        text-align: center;
+        color: #64748b;
+        margin-top: 15px;
+    }
+
+    </style>
+</head>
+
+<body>
+
+<div class="bg-glow"></div>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+
+    <div class="col-md-4">
+
+        <div class="admin-card shadow-lg">
+
+            <!-- HEADER -->
+            <div class="admin-header">
+                <h5>UNI BANK • ADMIN</h5>
+                <div class="admin-sub">Restricted Access</div>
+            </div>
+
+            <!-- BODY -->
+            <div class="admin-body">
+
+                <h6 class="text-center mb-3">Admin Login</h6>
+
+                <!-- messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="error-box">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- form -->
+                <form method="post">
+                    {% csrf_token %}
+
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control mb-3" required>
+
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control mb-3" required>
+
+                    <button class="btn btn-admin w-100 mt-2">
+                        Login as Admin
+                    </button>
+                </form>
+
+                <a href="{% url 'home' %}" class="btn btn-link w-100 mt-3 text-decoration-none">
+                    ← Back to Home
+                </a>
+
+                <div class="admin-footer">
+                    Authorized personnel only
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

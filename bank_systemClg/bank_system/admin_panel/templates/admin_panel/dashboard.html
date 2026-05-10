@@ -1,0 +1,613 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block content %}
+
+<!-- =============================== -->
+<!-- PAGE HEADER -->
+<!-- =============================== -->
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+    <div>
+
+        <div class="dashboard-badge mb-3">
+            <i class="bi bi-activity me-2"></i>
+            Banking System Operational
+        </div>
+
+        <h2 class="fw-bold mb-2">
+            Dashboard Overview
+        </h2>
+
+        <p class="text-muted mb-0">
+            Monitor customers, transactions, balances and banking activities in real-time.
+        </p>
+
+    </div>
+
+    <div class="d-flex gap-2 flex-wrap">
+
+        <a href="#" class="primary-btn text-decoration-none">
+            <i class="bi bi-person-plus-fill me-2"></i>
+            Add Customer
+        </a>
+
+        <a href="#" class="secondary-btn text-decoration-none">
+            <i class="bi bi-download me-2"></i>
+            Export Report
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<!-- =============================== -->
+<!-- STATS CARDS -->
+<!-- =============================== -->
+
+<div class="row g-4 mb-4">
+
+    <!-- USERS -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="dashboard-card stat-card h-100">
+
+            <div class="d-flex justify-content-between align-items-start">
+
+                <div>
+
+                    <small class="text-muted d-block mb-2">
+                        Total Customers
+                    </small>
+
+                    <h2 class="fw-bold mb-2">
+                        {{ total_users }}
+                    </h2>
+
+                    <span class="badge-success">
+                        +14% Growth
+                    </span>
+
+                </div>
+
+                <div class="stat-icon bg-primary-subtle text-primary">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- BALANCE -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="dashboard-card stat-card h-100">
+
+            <div class="d-flex justify-content-between align-items-start">
+
+                <div>
+
+                    <small class="text-muted d-block mb-2">
+                        Total Balance
+                    </small>
+
+                    <h2 class="fw-bold mb-2">
+                        ₹{{ total_balance }}
+                    </h2>
+
+                    <span class="badge-primary">
+                        Bank Reserve
+                    </span>
+
+                </div>
+
+                <div class="stat-icon bg-success-subtle text-success">
+                    <i class="bi bi-bank"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TRANSACTIONS -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="dashboard-card stat-card h-100">
+
+            <div class="d-flex justify-content-between align-items-start">
+
+                <div>
+
+                    <small class="text-muted d-block mb-2">
+                        Transactions
+                    </small>
+
+                    <h2 class="fw-bold mb-2">
+                        {{ total_transactions }}
+                    </h2>
+
+                    <span class="badge-warning">
+                        Live Activity
+                    </span>
+
+                </div>
+
+                <div class="stat-icon bg-info-subtle text-info">
+                    <i class="bi bi-arrow-left-right"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- FROZEN -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="dashboard-card stat-card h-100">
+
+            <div class="d-flex justify-content-between align-items-start">
+
+                <div>
+
+                    <small class="text-muted d-block mb-2">
+                        Frozen Accounts
+                    </small>
+
+                    <h2 class="fw-bold mb-2">
+                        {{ frozen_users }}
+                    </h2>
+
+                    <span class="badge-danger">
+                        Security Alert
+                    </span>
+
+                </div>
+
+                <div class="stat-icon bg-danger-subtle text-danger">
+                    <i class="bi bi-shield-lock-fill"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =============================== -->
+<!-- MAIN CONTENT -->
+<!-- =============================== -->
+
+<div class="row g-4">
+
+    <!-- LEFT SECTION -->
+
+    <div class="col-xl-8">
+
+        <!-- CHART -->
+
+        <div class="dashboard-card mb-4">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+                        Transaction Analytics
+                    </h5>
+
+                    <small class="text-muted">
+                        Monthly transaction overview
+                    </small>
+
+                </div>
+
+                <button class="secondary-btn">
+                    Last 6 Months
+                </button>
+
+            </div>
+
+            <div style="height: 350px;">
+                <canvas id="transactionChart"></canvas>
+            </div>
+
+        </div>
+
+
+
+        <!-- RECENT TRANSACTIONS -->
+
+        <div class="dashboard-card">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+                        Recent Transactions
+                    </h5>
+
+                    <small class="text-muted">
+                        Latest customer activities
+                    </small>
+
+                </div>
+
+                <a href="#" class="text-decoration-none fw-semibold">
+                    View All
+                </a>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for tx in recent_transactions %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="d-flex align-items-center gap-2">
+
+                                    {% if tx.transaction_type == 'DEPOSIT' %}
+
+                                        <div class="transaction-icon bg-success-subtle text-success">
+                                            <i class="bi bi-arrow-down"></i>
+                                        </div>
+
+                                    {% elif tx.transaction_type == 'WITHDRAW' %}
+
+                                        <div class="transaction-icon bg-danger-subtle text-danger">
+                                            <i class="bi bi-arrow-up"></i>
+                                        </div>
+
+                                    {% else %}
+
+                                        <div class="transaction-icon bg-primary-subtle text-primary">
+                                            <i class="bi bi-arrow-left-right"></i>
+                                        </div>
+
+                                    {% endif %}
+
+                                    <span class="fw-semibold">
+                                        {{ tx.transaction_type }}
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+                            <td class="fw-bold">
+                                ₹{{ tx.amount }}
+                            </td>
+
+                            <td>
+
+                                {% if tx.status == 'SUCCESS' %}
+
+                                    <span class="badge-success">
+                                        SUCCESS
+                                    </span>
+
+                                {% elif tx.status == 'PENDING' %}
+
+                                    <span class="badge-warning">
+                                        PENDING
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge-danger">
+                                        FAILED
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                {{ tx.timestamp|date:"d M Y" }}
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="4" class="text-center text-muted py-5">
+                                No transactions available.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- RIGHT SECTION -->
+
+    <div class="col-xl-4">
+
+        <!-- QUICK ACTIONS -->
+
+        <!-- QUICK ACTIONS -->
+
+<div class="dashboard-card mb-4">
+
+    <div class="mb-4">
+
+        <h5 class="fw-bold mb-1">
+            Quick Actions
+        </h5>
+
+        <small class="text-muted">
+            Administrative controls
+        </small>
+
+    </div>
+
+    <div class="row g-3">
+
+        <!-- ADD USER -->
+
+        <div class="col-6">
+
+            <a href="{% url 'add_user' %}"
+               class="quick-action-card text-decoration-none">
+
+                <div class="quick-action-icon bg-primary-subtle text-primary">
+
+                    <i class="bi bi-person-plus-fill"></i>
+
+                </div>
+
+                <span>Add User</span>
+
+            </a>
+
+        </div>
+
+
+        <!-- FREEZE ACCOUNT -->
+
+        <div class="col-6">
+
+            <a href="{% url 'freeze_accounts' %}"
+               class="quick-action-card text-decoration-none">
+
+                <div class="quick-action-icon bg-danger-subtle text-danger">
+
+                    <i class="bi bi-lock-fill"></i>
+
+                </div>
+
+                <span>Freeze</span>
+
+            </a>
+
+        </div>
+
+
+        <!-- VERIFY KYC -->
+
+        <div class="col-6">
+
+            <a href="{% url 'verify_kyc' %}"
+               class="quick-action-card text-decoration-none">
+
+                <div class="quick-action-icon bg-warning-subtle text-warning">
+
+                    <i class="bi bi-patch-check-fill"></i>
+
+                </div>
+
+                <span>Verify KYC</span>
+
+            </a>
+
+        </div>
+
+
+        <!-- REPORTS -->
+
+        <div class="col-6">
+
+            <a href="{% url 'reports' %}"
+               class="quick-action-card text-decoration-none">
+
+                <div class="quick-action-icon bg-success-subtle text-success">
+
+                    <i class="bi bi-file-earmark-bar-graph-fill"></i>
+
+                </div>
+
+                <span>Reports</span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+        <!-- RECENT CUSTOMERS -->
+
+        <div class="dashboard-card">
+
+            <div class="mb-4">
+
+                <h5 class="fw-bold mb-1">
+                    Recent Customers
+                </h5>
+
+                <small class="text-muted">
+                    Newly joined banking users
+                </small>
+
+            </div>
+
+            <div class="d-flex flex-column gap-3">
+
+                {% for user in recent_users %}
+
+                <div class="customer-card">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="customer-avatar">
+
+                            {{ user.user.username|slice:":1"|upper }}
+
+                        </div>
+
+                        <div>
+
+                            <div class="fw-semibold">
+                                {{ user.user.username }}
+                            </div>
+
+                            <small class="text-muted">
+                                {{ user.account_number }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <div class="fw-bold text-success">
+                        ₹{{ user.balance }}
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="text-center text-muted py-4">
+                    No recent customers found.
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =============================== -->
+<!-- CHART JS -->
+<!-- =============================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx = document.getElementById('transactionChart');
+
+new Chart(ctx, {
+
+    type: 'line',
+
+    data: {
+
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+
+        datasets: [{
+
+            label: 'Transactions',
+
+            data: [120, 190, 300, 250, 420, 510],
+
+            borderWidth: 3,
+
+            tension: 0.4,
+
+            fill: true
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        plugins: {
+
+            legend: {
+                display: false
+            }
+
+        },
+
+        scales: {
+
+            y: {
+                beginAtZero: true
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

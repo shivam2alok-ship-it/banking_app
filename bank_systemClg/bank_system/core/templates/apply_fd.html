@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+body {
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+}
+
+/* CARD */
+.fd-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px;
+    border: 1px solid #e5e7eb;
+}
+
+/* HEADER */
+.fd-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.fd-header h4 {
+    font-weight: 700;
+}
+
+.fd-header p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* FORM */
+.form-control,
+.form-select {
+    height: 48px;
+    border-radius: 10px;
+}
+
+/* SUMMARY BOX */
+.summary-box {
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 18px;
+    margin-top: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.summary-item:last-child {
+    margin-bottom: 0;
+}
+
+/* RATE BADGE */
+.rate-badge {
+    background: #dbeafe;
+    color: #1d4ed8;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* BUTTON */
+.btn-primary {
+    background: #2563eb;
+    border: none;
+    height: 48px;
+    border-radius: 10px;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+/* ALERT */
+.alert-custom {
+    border-radius: 10px;
+}
+
+</style>
+
+<div class="container py-5">
+
+<div class="row justify-content-center">
+<div class="col-md-6">
+
+<div class="fd-card shadow-sm">
+
+<!-- HEADER -->
+<div class="fd-header">
+    <h4>Open Fixed Deposit</h4>
+    <p>
+        Grow your savings securely with guaranteed returns
+    </p>
+</div>
+
+<!-- MESSAGES -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'success' %}success{% else %}danger{% endif %} alert-custom">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="post">
+{% csrf_token %}
+
+<!-- AMOUNT -->
+<div class="mb-3">
+    <label class="form-label">Deposit Amount (₹)</label>
+    <input
+        type="number"
+        name="amount"
+        id="amount"
+        class="form-control"
+        placeholder="Enter amount"
+        min="1000"
+        required
+    >
+    <small class="text-muted">
+        Minimum FD amount is ₹1000
+    </small>
+</div>
+
+<!-- DURATION -->
+<div class="mb-3">
+    <label class="form-label">Duration</label>
+
+    <select name="duration" id="duration" class="form-select" required>
+        <option value="">Select Duration</option>
+        <option value="6">6 Months</option>
+        <option value="12">12 Months</option>
+        <option value="24">24 Months</option>
+        <option value="36">36 Months</option>
+    </select>
+</div>
+
+<!-- FD SUMMARY -->
+<div class="summary-box">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">FD Summary</h6>
+        <span class="rate-badge" id="interestRate">
+            0%
+        </span>
+    </div>
+
+    <div class="summary-item">
+        <span>Estimated Returns</span>
+        <strong id="returns">₹0</strong>
+    </div>
+
+    <div class="summary-item">
+        <span>Maturity Amount</span>
+        <strong id="maturity">₹0</strong>
+    </div>
+
+</div>
+
+<button class="btn btn-primary w-100 mt-4">
+    Create Fixed Deposit
+</button>
+
+</form>
+
+</div>
+</div>
+</div>
+</div>
+
+<!-- JS CALCULATOR -->
+<script>
+
+const amountInput = document.getElementById('amount');
+const durationInput = document.getElementById('duration');
+
+const interestRateText = document.getElementById('interestRate');
+const returnsText = document.getElementById('returns');
+const maturityText = document.getElementById('maturity');
+
+function calculateFD() {
+
+    const amount = parseFloat(amountInput.value) || 0;
+    const duration = parseInt(durationInput.value) || 0;
+
+    let rate = 0;
+
+    // Interest slabs
+    if (duration >= 24) {
+        rate = 7.5;
+    }
+    else if (duration >= 12) {
+        rate = 6.8;
+    }
+    else if (duration >= 6) {
+        rate = 6.0;
+    }
+
+    // Simple Interest
+    const years = duration / 12;
+
+    const interest =
+        (amount * rate * years) / 100;
+
+    const maturity =
+        amount + interest;
+
+    interestRateText.innerText = rate + "%";
+    returnsText.innerText = "₹" + interest.toFixed(2);
+    maturityText.innerText = "₹" + maturity.toFixed(2);
+}
+
+amountInput.addEventListener('input', calculateFD);
+durationInput.addEventListener('change', calculateFD);
+
+</script>
+
+{% endblock %}

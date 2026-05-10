@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+/* HEADER */
+.tx-header h4 {
+    font-weight: 700;
+}
+
+/* CARD STYLE (same as dashboard) */
+.card-fin {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.card-fin:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.08);
+}
+
+/* FILTER BOX */
+.filter-box {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid #e5e7eb;
+}
+
+/* TABLE */
+.table-custom tbody tr {
+    transition: 0.2s;
+}
+
+.table-custom tbody tr:hover {
+    background: #eff6ff;
+}
+
+/* BADGES */
+.badge-deposit {
+    color: #1d4ed8;
+    background: #dbeafe;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.badge-withdraw {
+    color: #dc2626;
+    background: #fee2e2;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.badge-transfer {
+    color: #2563eb;
+    background: #dbeafe;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* AMOUNT */
+.amount-credit {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.amount-debit {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+/* BUTTON */
+.btn-blue {
+    background: #2563eb;
+    color: white;
+    border-radius: 10px;
+}
+
+.btn-blue:hover {
+    background: #1d4ed8;
+}
+
+</style>
+
+<!-- HEADER -->
+<div class="tx-header mb-4">
+    <h4>Transaction History</h4>
+    <p class="text-muted small">Track all your financial activities</p>
+</div>
+
+<!-- FILTERS -->
+<div class="card-fin mb-4">
+    <form method="get" class="row g-3 align-items-center">
+
+        <div class="col-md-3">
+            <select name="type" class="form-select">
+                <option value="">All Types</option>
+                <option value="DEPOSIT">Deposit</option>
+                <option value="WITHDRAW">Withdraw</option>
+                <option value="TRANSFER">Transfer</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <input type="date" name="start" class="form-control">
+        </div>
+
+      
+
+        <div class="col-md-3">
+            <input type="text" name="search" class="form-control" placeholder="Account number">
+        </div>
+
+        <div class="col-md-12 text-end">
+            <button class="btn btn-blue px-4">Filter</button>
+        </div>
+
+    </form>
+</div>
+
+<!-- TABLE -->
+<div class="card-fin">
+
+<table class="table table-custom align-middle">
+
+    <thead class="text-muted small">
+        <tr>
+            <th>Type</th>
+            <th>Details</th>
+            <th>Date</th>
+            <th class="text-end">Amount</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for t in transactions %}
+    <tr>
+
+        <!-- TYPE -->
+        <td>
+            {% if t.transaction_type == "DEPOSIT" %}
+                <span class="badge-deposit">Deposit</span>
+            {% elif t.transaction_type == "WITHDRAW" %}
+                <span class="badge-withdraw">Withdraw</span>
+            {% else %}
+                <span class="badge-transfer">Transfer</span>
+            {% endif %}
+        </td>
+
+        <!-- DETAILS -->
+        <td>
+            {% if t.transaction_type == "TRANSFER" %}
+                {% if t.sender == request.user.customer %}
+                    Sent → {{ t.receiver.account_number }}
+                {% else %}
+                    Received ← {{ t.sender.account_number }}
+                {% endif %}
+            {% else %}
+                Self transaction
+            {% endif %}
+        </td>
+
+        <!-- DATE -->
+        <td class="text-muted small">
+            {{ t.timestamp|date:"M d, Y H:i" }}
+        </td>
+
+        <!-- AMOUNT -->
+        <td class="text-end">
+            {% if t.sender == request.user.customer %}
+                <span class="amount-debit">-₹{{ t.amount }}</span>
+            {% else %}
+                <span class="amount-credit">+₹{{ t.amount }}</span>
+            {% endif %}
+        </td>
+
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4" class="text-center text-muted py-4">
+            No transactions found
+        </td>
+    </tr>
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+<!-- DOWNLOAD -->
+<div class="text-end mt-3">
+    <a href="{% url 'statement' %}" class="btn btn-outline-primary">
+        Download Statement (PDF)
+    </a>
+</div>
+
+</div>
+
+{% endblock %}

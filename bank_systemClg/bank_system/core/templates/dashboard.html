@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-4">
+
+<style>
+
+/* HEADER */
+.dashboard-header h4 {
+    font-weight: 700;
+}
+
+/* CARD */
+.card-fin {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.card-fin:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+
+/* BALANCE */
+.balance-card {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border-radius: 18px;
+    padding: 25px;
+}
+
+/* ACTION */
+.action-card {
+    display: block;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.25s ease;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    border-color: #2563eb;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+}
+
+/* INSIGHTS */
+.insight-box {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+}
+
+/* TABLE */
+.table-custom tbody tr:hover {
+    background: #f1f5f9;
+}
+
+
+</style>
+
+</div>
+
+
+<!-- HEADER -->
+<div class="dashboard-header mb-4">
+    <h4>Welcome, {{ request.user.username }}</h4>
+    <p class="text-muted small">Financial overview</p>
+</div>
+
+<!-- BALANCE + STATUS -->
+<div class="row g-4 mb-4">
+
+    <div class="col-md-6">
+        <div class="balance-card">
+            <p>Available Balance</p>
+            <h1>₹ {{ customer.balance }}</h1>
+            <small>{{ customer.account_number }}</small>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card-fin">
+            <p>Status</p>
+            {% if customer.account_status == "ACTIVE" %}
+                <h6 class="text-success">● Active</h6>
+            {% else %}
+                <h6 class="text-danger">● Frozen</h6>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card-fin">
+            <p>Profile</p>
+            <h6>{{ profile_completion }}%</h6>
+            <div class="progress">
+                <div class="progress-bar" style="width: {{ profile_completion }}%"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- QUICK ACTIONS (UPDATED) --> 
+ <div class="card-fin mb-4 p-3"> 
+    <div class="d-flex justify-content-between align-items-center mb-3">
+         <h6 class="mb-0">Quick Actions</h6> 
+         <small class="text-muted">Manage your account</small> 
+        </div> 
+        <div class="row g-3">
+             <!-- DEPOSIT -->
+               <div class="col-md-4"> 
+                <a href="{% url 'deposit' %}" class="action-card text-decoration-none">
+                     <div class="d-flex align-items-center gap-3">
+                         <div class="action-icon bg-success-subtle text-success">
+     <i class="bi bi-plus-lg">
+
+     </i>
+     </div>
+      <div>
+         <h6 class="mb-0 text-dark">Deposit</h6>
+          <small class="text-muted">Add money</small>
+         </div> 
+        </div>
+     </a> 
+    </div>
+     <!-- WITHDRAW -->
+       <div class="col-md-4"> 
+        <a href="{% url 'withdraw' %}" class="action-card text-decoration-none"> 
+            <div class="d-flex align-items-center gap-3"> 
+                <div class="action-icon bg-danger-subtle text-danger">
+                     <i class="bi bi-dash-lg"></i> 
+                    </div> 
+                    <div> 
+                        <h6 class="mb-0 text-dark">Withdraw</h6> 
+                        <small class="text-muted">Take money out</small>
+                     </div> 
+                    </div>
+                 </a> 
+                </div>
+                 <!-- TRANSFER -->
+                   <div class="col-md-4">
+                     <a href="{% url 'transfer' %}" class="action-card action-primary text-decoration-none">
+                         <div class="d-flex align-items-center gap-3">
+                             <div class="action-icon bg-primary text-white">
+                                 <i class="bi bi-arrow-left-right"></i>
+                                 </div>
+                                  <div>
+                                     <h6 class="mb-0 text-dark">Transfer</h6> 
+                                     <small class="text-muted">Send money</small>
+                                     </div>
+                                     </div>
+                                     </a>
+                                     </div>
+                                     </div>
+                                     </div>
+
+<!-- INSIGHTS -->
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <div class="insight-box">
+            <small>Total Credits</small>
+            <h6 class="text-success">₹ {{ total_credit }}</h6>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="insight-box">
+            <small>Total Debits</small>
+            <h6 class="text-danger">₹ {{ total_debit }}</h6>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="insight-box">
+            <small>Transactions</small>
+            <h6>{{ transaction_count }}</h6>
+        </div>
+    </div>
+
+</div>
+
+<!-- CHART -->
+<div class="card-fin mb-4">
+    <h5 class="mb-3">Monthly Activity</h5>
+    <canvas id="financeChart"></canvas>
+</div>
+
+<!-- TRANSACTIONS -->
+<div class="card-fin">
+    <h5 class="mb-3">Recent Activity</h5>
+
+    <table class="table table-custom">
+
+        <tbody>
+        {% for t in transactions %}
+        <tr>
+            <td>
+                {% if t.transaction_type == "TRANSFER" %}
+                    {% if t.sender == customer %}
+                        <span class="text-danger">Sent → {{ t.receiver.account_number }}</span>
+                    {% else %}
+                        <span class="text-success">Received ← {{ t.sender.account_number }}</span>
+                    {% endif %}
+                {% elif t.transaction_type == "DEPOSIT" %}
+                    <span class="text-success">Deposit</span>
+                {% else %}
+                    <span class="text-danger">Withdraw</span>
+                {% endif %}
+            </td>
+
+            <td>{{ t.timestamp|date:"M d, H:i" }}</td>
+
+            <td class="text-end">
+                {% if t.sender == customer or t.transaction_type == "WITHDRAW" %}
+                    <span class="text-danger">-₹{{ t.amount }}</span>
+                {% else %}
+                    <span class="text-success">+₹{{ t.amount }}</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+
+<!-- CHART SCRIPT -->
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const ctx = document.getElementById('financeChart');
+
+    if (!ctx) {
+        console.log("Canvas not found");
+        return;
+    }
+
+    console.log("Months:", {{ months|safe }});
+    console.log("Credits:", {{ credits|safe }});
+    console.log("Debits:", {{ debits|safe }});
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ months|safe }},
+            datasets: [
+                {
+                    label: 'Credits',
+                    data: {{ credits|safe }},
+                    borderColor: '#16a34a',
+                    backgroundColor: 'rgba(22,163,74,0.1)',
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Debits',
+                    data: {{ debits|safe }},
+                    borderColor: '#dc2626',
+                    backgroundColor: 'rgba(220,38,38,0.1)',
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            },
+            scales: {
+                x: { grid: { display: false } },
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

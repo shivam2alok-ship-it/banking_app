@@ -1,0 +1,441 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+/* HEADER */
+.profile-header h4 {
+    font-weight: 700;
+}
+
+/* CARD STYLE */
+.card-fin {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.card-fin:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(37,99,235,0.08);
+}
+
+/* BALANCE */
+.balance-card {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border-radius: 18px;
+    padding: 22px;
+}
+
+/* PROFILE IMAGE */
+.profile-img {
+    border-radius: 50%;
+    border: 4px solid #2563eb;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    object-fit: cover;
+}
+
+/* PROGRESS */
+.progress {
+    height: 8px;
+    border-radius: 10px;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+}
+
+/* INPUTS */
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+}
+
+.form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 0.2rem rgba(37,99,235,0.15);
+}
+
+/* BUTTON */
+.btn-primary {
+    background: #2563eb;
+    border: none;
+    border-radius: 10px;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+/* FD BOX */
+.fd-box {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+</style>
+
+<!-- HEADER -->
+<div class="profile-header mb-4">
+    <h4>Profile Settings</h4>
+    <p class="text-muted small">
+        Manage your personal and banking details
+    </p>
+</div>
+
+<div class="row g-4">
+
+    <!-- LEFT PANEL -->
+    <div class="col-md-4">
+
+        <!-- PROFILE CARD -->
+        <div class="card-fin text-center mb-3">
+
+            {% if customer.profile_picture %}
+                <img src="{{ customer.profile_picture.url }}"
+                     width="110"
+                     height="110"
+                     class="profile-img mb-3">
+            {% else %}
+                <img src="https://via.placeholder.com/110"
+                     width="110"
+                     height="110"
+                     class="profile-img mb-3">
+            {% endif %}
+
+            <h6 class="mb-0">
+                {{ request.user.username }}
+            </h6>
+
+            <small class="text-muted">
+                {{ customer.account_number }}
+            </small>
+
+        </div>
+
+        <!-- ACCOUNT STATUS -->
+        <div class="card-fin mb-3">
+
+            <p class="mb-2 text-muted">
+                Account Status
+            </p>
+
+            {% if customer.account_status == "ACTIVE" %}
+                <span class="badge bg-primary">
+                    Active
+                </span>
+            {% else %}
+                <span class="badge bg-secondary">
+                    Frozen
+                </span>
+            {% endif %}
+
+        </div>
+
+        <!-- PROFILE COMPLETION -->
+        <div class="card-fin">
+
+            <p class="mb-2 text-muted">
+                Profile Completion
+            </p>
+
+            <h5 class="mb-2">
+                {{ completion_percentage }}%
+            </h5>
+
+            <div class="progress">
+
+                <div class="progress-bar"
+                     style="width: {{ completion_percentage }}%">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="col-md-8">
+
+        <!-- BALANCE -->
+        <div class="balance-card mb-4">
+
+            <p class="mb-1">
+                Available Balance
+            </p>
+
+            <h2>
+                ₹ {{ customer.balance }}
+            </h2>
+
+        </div>
+
+        <!-- FIXED DEPOSITS -->
+        <div class="card-fin mb-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <h6 class="mb-0">
+                    Fixed Deposits
+                </h6>
+
+                <a href="{% url 'apply_fd' %}"
+                   class="btn btn-primary btn-sm">
+                    Apply FD
+                </a>
+
+            </div>
+
+            {% if fds %}
+
+                {% for fd in fds %}
+
+                <div class="fd-box">
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+
+                        <div>
+                            <h6 class="mb-1">
+                                ₹ {{ fd.amount }}
+                            </h6>
+
+                            <small class="text-muted">
+                                {{ fd.duration }} Months
+                            </small>
+                        </div>
+
+                        <div>
+
+                            {% if fd.status == "APPROVED" %}
+                                <span class="badge bg-success">
+                                    Approved
+                                </span>
+
+                            {% elif fd.status == "PENDING" %}
+                                <span class="badge bg-warning text-dark">
+                                    Pending
+                                </span>
+
+                            {% else %}
+                                <span class="badge bg-danger">
+                                    Rejected
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <div class="row text-center">
+
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">
+                                Interest Rate
+                            </small>
+
+                            <strong>
+                                {{ fd.interest_rate }}%
+                            </strong>
+                        </div>
+
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">
+                                Maturity Amount
+                            </small>
+
+                            <strong class="text-success">
+                                ₹ {{ fd.maturity_amount }}
+                            </strong>
+                        </div>
+
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">
+                                Maturity Date
+                            </small>
+
+                            <strong>
+                                {{ fd.maturity_date }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="text-center py-4">
+
+                    <h6 class="text-muted mb-2">
+                        No Fixed Deposits Yet
+                    </h6>
+
+                    <a href="{% url 'apply_fd' %}"
+                       class="btn btn-primary btn-sm">
+                        Create FD
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <!-- ACCOUNT INFO -->
+        <div class="card-fin mb-4">
+
+            <h6 class="mb-3">
+                Account Details
+            </h6>
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="text-muted small">
+                        Username
+                    </label>
+
+                    <input class="form-control"
+                           value="{{ request.user.username }}"
+                           readonly>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="text-muted small">
+                        Email
+                    </label>
+
+                    <input class="form-control"
+                           value="{{ request.user.email }}"
+                           readonly>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="text-muted small">
+                        Account Number
+                    </label>
+
+                    <input class="form-control"
+                           value="{{ customer.account_number }}"
+                           readonly>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="text-muted small">
+                        Phone
+                    </label>
+
+                    <input class="form-control"
+                           value="{{ customer.phone }}"
+                           readonly>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- UPDATE FORM -->
+        <div class="card-fin">
+
+            <h6 class="mb-3">
+                Update Profile
+            </h6>
+
+            <form method="post" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="text-muted small">
+                        Profile Picture
+                    </label>
+
+                    <input type="file"
+                           name="profile_picture"
+                           class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label class="text-muted small">
+                        Full Name
+                    </label>
+
+                    <input type="text"
+                           name="full_name"
+                           class="form-control"
+                           value="{{ customer.full_name }}"
+                           required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="text-muted small">
+                        Phone
+                    </label>
+
+                    <input type="tel"
+                           name="phone"
+                           class="form-control"
+                           value="{{ customer.phone }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="text-muted small">
+                        Date of Birth
+                    </label>
+
+                    <input type="date"
+                           name="date_of_birth"
+                           class="form-control"
+                           value="{{ customer.date_of_birth|date:'Y-m-d' }}">
+                </div>
+
+                <h6 class="mt-3 mb-2">
+                    KYC Details
+                </h6>
+
+                <div class="mb-3">
+                    <label class="text-muted small">
+                        PAN
+                    </label>
+
+                    <input type="text"
+                           name="pan_number"
+                           class="form-control"
+                           value="{{ customer.pan_number }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="text-muted small">
+                        Aadhaar
+                    </label>
+
+                    <input type="text"
+                           name="aadhaar_number"
+                           class="form-control"
+                           value="{{ customer.aadhaar_number }}">
+                </div>
+
+                <button class="btn btn-primary w-100">
+                    Save Changes
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+body {
+    background: linear-gradient(135deg, #eef2ff, #f1f5f9);
+}
+
+.bg-decor {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+}
+
+.bg-decor::before {
+    content: "";
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(37,99,235,0.15), transparent 70%);
+    top: -120px;
+    left: -120px;
+}
+
+.bg-decor::after {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(99,102,241,0.12), transparent 70%);
+    bottom: -120px;
+    right: -120px;
+}
+
+.auth-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    z-index: 2;
+    position: relative;
+}
+
+.auth-banner {
+    height: 120px;
+    background: url("{% static 'images/bank.jpg' %}") center/cover no-repeat;
+    position: relative;
+}
+
+.auth-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(37,99,235,0.7), rgba(29,78,216,0.6));
+}
+
+.banner-text {
+    position: absolute;
+    bottom: 10px;
+    left: 16px;
+    color: white;
+}
+
+.auth-body {
+    padding: 20px;
+}
+
+.form-control {
+    height: 40px;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.error-box {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 13px;
+}
+
+.btn-primary {
+    background: #2563eb;
+    border: none;
+    height: 42px;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+</style>
+
+<div class="bg-decor"></div>
+
+<div class="row justify-content-center align-items-center" style="min-height: 90vh;">
+<div class="col-md-4">
+
+<div class="auth-card shadow-sm">
+
+<!-- HEADER -->
+<div class="auth-banner">
+    <div class="banner-text">
+        <h6>Join UNI Bank</h6>
+        <p>Secure. Fast. Reliable.</p>
+    </div>
+</div>
+
+<!-- BODY -->
+<div class="auth-body">
+
+<h6 class="text-center mb-1">Create Account</h6>
+<p class="text-center text-muted small mb-3">Get started</p>
+
+<!-- GLOBAL ERRORS -->
+{% if form.non_field_errors %}
+    <div class="error-box">
+        {% for error in form.non_field_errors %}
+            {{ error }}
+        {% endfor %}
+    </div>
+{% endif %}
+
+<form method="post">
+{% csrf_token %}
+
+<!-- USERNAME -->
+<div class="mb-2">
+    {{ form.username }}
+    {% for error in form.username.errors %}
+        <small class="text-danger">{{ error }}</small>
+    {% endfor %}
+</div>
+
+<!-- EMAIL -->
+<div class="mb-2">
+    {{ form.email }}
+    {% for error in form.email.errors %}
+        <small class="text-danger">{{ error }}</small>
+    {% endfor %}
+</div>
+
+<!-- FULL NAME -->
+<div class="mb-2">
+    {{ form.full_name }}
+    {% for error in form.full_name.errors %}
+        <small class="text-danger">{{ error }}</small>
+    {% endfor %}
+</div>
+
+<!-- PHONE -->
+<div class="mb-2">
+    {{ form.phone }}
+    {% for error in form.phone.errors %}
+        <small class="text-danger">{{ error }}</small>
+    {% endfor %}
+</div>
+
+<!-- DOB -->
+<div class="mb-2">
+    {{ form.date_of_birth }}
+    {% for error in form.date_of_birth.errors %}
+        <small class="text-danger">{{ error }}</small>
+    {% endfor %}
+</div>
+
+<!-- PASSWORD -->
+<div class="mb-2">
+    {{ form.password }}
+    {% for error in form.password.errors %}
+        <small class="text-danger">{{ error }}</small>
+    {% endfor %}
+</div>
+
+<!-- CONFIRM PASSWORD -->
+<div class="mb-2">
+    {{ form.confirm_password }}
+    {% for error in form.confirm_password.errors %}
+        <small class="text-danger">{{ error }}</small>
+    {% endfor %}
+</div>
+
+<button class="btn btn-primary w-100 mt-2">
+    Create Account
+</button>
+
+</form>
+
+<p class="text-center mt-3 mb-0 small">
+    Already have an account?
+    <a href="{% url 'login' %}" class="fw-semibold text-decoration-none">
+        Sign In
+    </a>
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+{% endblock %}

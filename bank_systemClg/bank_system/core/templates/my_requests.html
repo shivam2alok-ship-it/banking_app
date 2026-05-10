@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold">My Support Requests</h4>
+
+        <a href="{% url 'create_request' %}" class="btn btn-dark btn-sm">
+            + New Request
+        </a>
+    </div>
+
+    {% if requests %}
+
+        {% for req in requests %}
+        <div class="card shadow-sm mb-3 border-0">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <h6 class="fw-bold mb-1">{{ req.subject }}</h6>
+                        <p class="text-muted small mb-2">
+                            {{ req.message }}
+                        </p>
+                    </div>
+
+                    <!-- STATUS BADGE -->
+                    <div>
+                        {% if req.status == 'PENDING' %}
+                            <span class="badge bg-warning text-dark px-3 py-2">
+                                Pending
+                            </span>
+                        {% elif req.status == 'RESOLVED' %}
+                            <span class="badge bg-success px-3 py-2">
+                                Resolved
+                            </span>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="text-end mt-2">
+                    <small class="text-muted">
+                        {{ req.created_at }}
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    {% else %}
+
+        <!-- EMPTY STATE -->
+        <div class="text-center mt-5">
+            <h6 class="text-muted">No requests yet</h6>
+            <p class="text-muted small">
+                You haven't raised any support requests.
+            </p>
+
+            <a href="{% url 'create_request' %}" class="btn btn-outline-dark mt-2">
+                Create First Request
+            </a>
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

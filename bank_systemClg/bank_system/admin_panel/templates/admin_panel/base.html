@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SecureBank Admin Panel</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:#f4f7fb;
+            font-family:"Segoe UI",sans-serif;
+            overflow-x:hidden;
+            color:#0f172a;
+        }
+
+        a{
+            text-decoration:none;
+        }
+
+        ul{
+            padding:0;
+            margin:0;
+            list-style:none;
+        }
+
+        /* ================================= */
+        /* SIDEBAR */
+        /* ================================= */
+
+        .sidebar{
+
+            width:280px;
+            height:100vh;
+            position:fixed;
+            top:0;
+            left:0;
+            background:linear-gradient(180deg,#081028,#0f172a);
+            padding:24px 18px;
+            overflow-y:auto;
+            z-index:1000;
+
+        }
+
+        .sidebar::-webkit-scrollbar{
+            width:4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb{
+            background:#1e293b;
+            border-radius:20px;
+        }
+
+        .brand{
+
+            display:flex;
+            align-items:center;
+            gap:14px;
+            margin-bottom:38px;
+            padding:0 10px;
+
+        }
+
+        .brand-logo{
+
+            width:52px;
+            height:52px;
+            border-radius:16px;
+            background:linear-gradient(135deg,#2563eb,#3b82f6);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:white;
+            font-size:24px;
+            box-shadow:0 10px 20px rgba(37,99,235,0.35);
+
+        }
+
+        .brand-text h4{
+
+            color:white;
+            margin:0;
+            font-size:20px;
+            font-weight:700;
+
+        }
+
+        .brand-text small{
+
+            color:#94a3b8;
+
+        }
+
+        .menu-title{
+
+            color:#64748b;
+            font-size:12px;
+            letter-spacing:1px;
+            font-weight:700;
+            margin:26px 0 14px 12px;
+
+        }
+
+        .sidebar-link{
+
+            display:flex;
+            align-items:center;
+            gap:14px;
+            padding:14px 16px;
+            border-radius:16px;
+            color:#cbd5e1;
+            transition:0.3s;
+            margin-bottom:8px;
+            font-weight:500;
+
+        }
+
+        .sidebar-link:hover{
+
+            background:rgba(255,255,255,0.06);
+            color:white;
+            transform:translateX(3px);
+
+        }
+
+        .sidebar-link.active{
+
+            background:linear-gradient(135deg,#2563eb,#3b82f6);
+            color:white;
+            box-shadow:0 10px 25px rgba(37,99,235,0.35);
+
+        }
+
+        .sidebar-link i{
+
+            font-size:18px;
+
+        }
+
+        /* ================================= */
+        /* MAIN */
+        /* ================================= */
+
+        .main{
+
+            margin-left:280px;
+            padding:28px;
+
+        }
+
+        /* ================================= */
+        /* TOPBAR */
+        /* ================================= */
+
+        .topbar{
+
+            background:white;
+            border-radius:24px;
+            padding:18px 24px;
+            margin-bottom:28px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            box-shadow:0 4px 20px rgba(15,23,42,0.05);
+
+        }
+
+        .topbar-left h5{
+
+            margin:0;
+            font-weight:700;
+            font-size:22px;
+
+        }
+
+        .topbar-left small{
+
+            color:#64748b;
+
+        }
+
+        .topbar-right{
+
+            display:flex;
+            align-items:center;
+            gap:16px;
+
+        }
+
+        .search-box{
+
+            position:relative;
+            width:320px;
+
+        }
+
+        .search-box input{
+
+            width:100%;
+            border:none;
+            outline:none;
+            background:#f1f5f9;
+            border-radius:14px;
+            padding:12px 16px 12px 44px;
+            font-size:14px;
+
+        }
+
+        .search-box i{
+
+            position:absolute;
+            left:16px;
+            top:13px;
+            color:#64748b;
+
+        }
+
+        .icon-btn{
+
+            width:46px;
+            height:46px;
+            border-radius:14px;
+            background:#f8fafc;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            transition:0.3s;
+            border:1px solid #e2e8f0;
+
+        }
+
+        .icon-btn:hover{
+
+            background:#2563eb;
+            color:white;
+
+        }
+
+        .admin-profile{
+
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding-left:10px;
+
+        }
+
+        .admin-avatar{
+
+            width:48px;
+            height:48px;
+            border-radius:50%;
+            background:linear-gradient(135deg,#2563eb,#60a5fa);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:white;
+            font-weight:700;
+            font-size:18px;
+
+        }
+
+        .admin-name{
+
+            font-weight:700;
+            margin-bottom:0;
+
+        }
+
+        .admin-role{
+
+            color:#64748b;
+            font-size:13px;
+
+        }
+
+        /* ================================= */
+        /* COMMON CARDS */
+        /* ================================= */
+
+        .dashboard-card{
+
+            background:white;
+            border-radius:24px;
+            padding:24px;
+            box-shadow:0 4px 20px rgba(15,23,42,0.05);
+            margin-bottom:24px;
+
+        }
+
+        .card-title{
+
+            font-size:20px;
+            font-weight:700;
+            margin-bottom:4px;
+
+        }
+
+        .card-subtitle{
+
+            color:#64748b;
+            font-size:14px;
+
+        }
+
+        /* ================================= */
+        /* TABLE */
+        /* ================================= */
+
+        .table{
+
+            margin-bottom:0;
+
+        }
+
+        .table thead th{
+
+            border:none;
+            background:#f8fafc;
+            color:#64748b;
+            font-size:13px;
+            padding:16px;
+            white-space:nowrap;
+
+        }
+
+        .table tbody td{
+
+            padding:16px;
+            vertical-align:middle;
+            border-color:#f1f5f9;
+
+        }
+
+        /* ================================= */
+        /* BADGES */
+        /* ================================= */
+
+        .badge-success{
+
+            background:#dcfce7;
+            color:#16a34a;
+            padding:7px 14px;
+            border-radius:30px;
+            font-size:12px;
+            font-weight:700;
+
+        }
+
+        .badge-danger{
+
+            background:#fee2e2;
+            color:#dc2626;
+            padding:7px 14px;
+            border-radius:30px;
+            font-size:12px;
+            font-weight:700;
+
+        }
+
+        .badge-warning{
+
+            background:#fef3c7;
+            color:#ca8a04;
+            padding:7px 14px;
+            border-radius:30px;
+            font-size:12px;
+            font-weight:700;
+
+        }
+
+        .badge-primary{
+
+            background:#dbeafe;
+            color:#2563eb;
+            padding:7px 14px;
+            border-radius:30px;
+            font-size:12px;
+            font-weight:700;
+
+        }
+
+        /* ================================= */
+        /* BUTTONS */
+        /* ================================= */
+
+        .primary-btn{
+
+            border:none;
+            background:linear-gradient(135deg,#2563eb,#3b82f6);
+            color:white;
+            padding:12px 18px;
+            border-radius:14px;
+            font-weight:600;
+            transition:0.3s;
+
+        }
+
+        .primary-btn:hover{
+
+            transform:translateY(-2px);
+            box-shadow:0 10px 20px rgba(37,99,235,0.25);
+
+        }
+
+        .secondary-btn{
+
+            border:none;
+            background:#f1f5f9;
+            padding:12px 18px;
+            border-radius:14px;
+            font-weight:600;
+
+        }
+
+        /* ================================= */
+        /* ALERTS */
+        /* ================================= */
+
+        .custom-alert{
+
+            border:none;
+            border-radius:16px;
+            padding:14px 18px;
+            font-weight:500;
+            margin-bottom:20px;
+
+        }
+
+        /* ================================= */
+        /* RESPONSIVE */
+        /* ================================= */
+
+        @media(max-width:1200px){
+
+            .sidebar{
+                width:90px;
+            }
+
+            .sidebar .brand-text,
+            .sidebar .menu-title,
+            .sidebar-link span{
+                display:none;
+            }
+
+            .main{
+                margin-left:90px;
+            }
+
+        }
+
+        @media(max-width:992px){
+
+            .topbar{
+                flex-direction:column;
+                align-items:flex-start;
+                gap:18px;
+            }
+
+            .topbar-right{
+                width:100%;
+                flex-wrap:wrap;
+            }
+
+            .search-box{
+                width:100%;
+            }
+
+        }
+
+        @media(max-width:768px){
+
+            .sidebar{
+                display:none;
+            }
+
+            .main{
+                margin-left:0;
+                padding:18px;
+            }
+
+        }
+
+        /* ================================= */
+/* QUICK ACTIONS */
+/* ================================= */
+
+.quick-action-card{
+
+    background:#f8fafc;
+    border-radius:18px;
+    padding:22px 16px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    transition:0.3s;
+    border:1px solid #e2e8f0;
+    min-height:140px;
+    color:#0f172a;
+    font-weight:600;
+
+}
+
+.quick-action-card:hover{
+
+    transform:translateY(-4px);
+    background:white;
+    box-shadow:0 12px 24px rgba(15,23,42,0.08);
+
+}
+
+.quick-action-icon{
+
+    width:58px;
+    height:58px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+
+}
+
+.quick-action-card span{
+
+    font-size:15px;
+
+}
+    </style>
+
+</head>
+
+<body>
+
+<!-- ================================= -->
+<!-- SIDEBAR -->
+<!-- ================================= -->
+
+<div class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            <i class="bi bi-bank2"></i>
+        </div>
+
+        <div class="brand-text">
+            <h4>SecureBank</h4>
+            <small>Admin Console</small>
+        </div>
+
+    </div>
+
+
+    <div class="menu-title">
+        MAIN MENU
+    </div>
+
+
+    <a href="{% url 'admin_dashboard' %}" class="sidebar-link active">
+        <i class="bi bi-grid-fill"></i>
+        <span>Dashboard</span>
+    </a>
+
+
+    <a href="{% url 'manage_users' %}" class="sidebar-link">
+        <i class="bi bi-people-fill"></i>
+        <span>Customers</span>
+    </a>
+
+
+    <a href="{% url 'all_transactions' %}" class="sidebar-link">
+        <i class="bi bi-arrow-left-right"></i>
+        <span>Transactions</span>
+    </a>
+
+
+    <a href="{% url 'fixed_deposits' %}" class="sidebar-link">
+        <i class="bi bi-bank"></i>
+        <span>Fixed Deposits</span>
+    </a>
+
+
+    <a href="{% url 'support_requests' %}" class="sidebar-link">
+        <i class="bi bi-headset"></i>
+        <span>Support Center</span>
+    </a>
+
+
+    <div class="menu-title">
+        SYSTEM
+    </div>
+
+
+    <a href="#" class="sidebar-link">
+        <i class="bi bi-shield-lock-fill"></i>
+        <span>Security</span>
+    </a>
+
+
+    <a href="#" class="sidebar-link">
+        <i class="bi bi-gear-fill"></i>
+        <span>Settings</span>
+    </a>
+
+
+    <a href="{% url 'admin_logout' %}" class="sidebar-link">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Logout</span>
+    </a>
+
+</div>
+
+
+<!-- ================================= -->
+<!-- MAIN -->
+<!-- ================================= -->
+
+<div class="main">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+        <div class="topbar-left">
+
+            <h5>
+                Banking Administration
+            </h5>
+
+            <small>
+                Monitor customers, transactions and banking operations
+            </small>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+            <div class="search-box">
+
+                <i class="bi bi-search"></i>
+
+                <input type="text"
+                       placeholder="Search customers, transactions...">
+
+            </div>
+
+
+            <div class="icon-btn">
+                <i class="bi bi-bell"></i>
+            </div>
+
+
+            <div class="icon-btn">
+                <i class="bi bi-envelope"></i>
+            </div>
+
+
+            <div class="admin-profile">
+
+                <div class="admin-avatar">
+                    {{ request.user.username|slice:":1"|upper }}
+                </div>
+
+                <div>
+
+                    <div class="admin-name">
+                        {{ request.user.username }}
+                    </div>
+
+                    <div class="admin-role">
+                        System Administrator
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DJANGO MESSAGES -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }} custom-alert">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- CONTENT -->
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+</body>
+
+</html>

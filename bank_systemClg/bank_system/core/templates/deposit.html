@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+.deposit-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid #e5e7eb;
+}
+
+.balance-box {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.quick-btn {
+    border-radius: 25px;
+    font-size: 13px;
+    padding: 6px 14px;
+}
+
+.error-box {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+
+        <div class="deposit-card shadow-sm">
+
+            <h4 class="mb-3">Deposit Funds</h4>
+
+            <!-- BALANCE -->
+            <div class="balance-box">
+                <small>Available Balance</small>
+                <h3 class="mb-0">₹ {{ customer.balance }}</h3>
+            </div>
+
+            <!-- ERROR -->
+            {% if error %}
+            <div class="error-box">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <!-- FORM -->
+            <form method="post">
+                {% csrf_token %}
+
+                <label class="form-label">Enter Amount</label>
+                <input 
+                    type="number"
+                    name="amount"
+                    class="form-control mb-3"
+                    placeholder="Minimum ₹100"
+                    min="1"
+                    step="1"
+                    required
+                >
+
+                <!-- QUICK AMOUNTS -->
+                <div class="mb-3 d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-light border quick-btn" onclick="setAmount(100)">₹100</button>
+                    <button type="button" class="btn btn-light border quick-btn" onclick="setAmount(500)">₹500</button>
+                    <button type="button" class="btn btn-light border quick-btn" onclick="setAmount(1000)">₹1000</button>
+                    <button type="button" class="btn btn-light border quick-btn" onclick="setAmount(5000)">₹5000</button>
+                </div>
+
+                <button class="btn btn-primary w-100">
+                    Deposit Money
+                </button>
+
+            </form>
+
+            <a href="{% url 'dashboard' %}" class="btn btn-link mt-3 d-block text-center">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+function setAmount(value) {
+    document.querySelector('input[name="amount"]').value = value;
+}
+</script>
+
+{% endblock %}

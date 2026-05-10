@@ -1,0 +1,154 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block content %}
+
+<div class="dashboard-card">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h3 class="card-title">Customers</h3>
+            <p class="card-subtitle">
+                Manage all bank customers
+            </p>
+        </div>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+
+                <tr>
+                    <th>Customer</th>
+                    <th>Account Number</th>
+                    <th>Balance</th>
+                    <th>Status</th>
+                    <th>Profile</th>
+                    <th>Actions</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for customer in users %}
+
+                <tr>
+
+                    <td>
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <div class="admin-avatar">
+                                {{ customer.user.username|slice:":1"|upper }}
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    {{ customer.user.username }}
+                                </strong>
+
+                                <br>
+
+                                <small class="text-muted">
+                                    {{ customer.full_name }}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+                        {{ customer.account_number }}
+                    </td>
+
+                    <td>
+                        ₹{{ customer.balance }}
+                    </td>
+
+                    <td>
+
+                        {% if customer.account_status == 'ACTIVE' %}
+
+                            <span class="badge-success">
+                                Active
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge-danger">
+                                Frozen
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <div class="progress"
+                             style="height:10px; border-radius:20px;">
+
+                            <div class="progress-bar"
+                                 style="width:{{ customer.profile_completion }}%">
+
+                            </div>
+
+                        </div>
+
+                        <small>
+                            {{ customer.profile_completion }}%
+                        </small>
+
+                    </td>
+
+                    <td>
+
+                        <a href="{% url 'user_detail' customer.id %}"
+                           class="btn btn-sm btn-primary">
+
+                            View
+
+                        </a>
+
+                        {% if customer.account_status == 'ACTIVE' %}
+
+                            <a href="{% url 'freeze_account' customer.id %}"
+                               class="btn btn-sm btn-danger">
+
+                                Freeze
+
+                            </a>
+
+                        {% else %}
+
+                            <a href="{% url 'activate_account' customer.id %}"
+                               class="btn btn-sm btn-success">
+
+                                Activate
+
+                            </a>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

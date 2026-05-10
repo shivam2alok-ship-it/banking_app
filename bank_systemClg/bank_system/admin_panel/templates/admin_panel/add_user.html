@@ -1,0 +1,1115 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block title %}
+Create Customer
+{% endblock %}
+
+{% block content %}
+
+<div class="add-user-page">
+
+    <!-- ========================= -->
+    <!-- PAGE HEADER -->
+    <!-- ========================= -->
+
+    <div class="page-header">
+
+        <div>
+
+            <div class="page-badge">
+                <i class="bi bi-shield-check"></i>
+                Secure Banking Enrollment
+            </div>
+
+            <h1 class="page-title">
+                Create New Customer
+            </h1>
+
+            <p class="page-subtitle">
+                Register and onboard banking customers with account verification
+                and secure financial setup.
+            </p>
+
+        </div>
+
+        <div class="header-actions">
+
+            <button class="header-btn light-btn">
+                <i class="bi bi-file-earmark-text"></i>
+                Documentation
+            </button>
+
+            <button class="header-btn primary-btn">
+                <i class="bi bi-person-plus-fill"></i>
+                New Registration
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- ALERTS -->
+    <!-- ========================= -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="custom-alert {{ message.tags }}">
+
+                <div class="alert-icon">
+
+                    {% if message.tags == 'success' %}
+                        <i class="bi bi-check-circle-fill"></i>
+                    {% else %}
+                        <i class="bi bi-exclamation-circle-fill"></i>
+                    {% endif %}
+
+                </div>
+
+                <div>
+                    {{ message }}
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+
+    <!-- ========================= -->
+    <!-- MAIN GRID -->
+    <!-- ========================= -->
+
+    <div class="main-grid">
+
+        <!-- ========================= -->
+        <!-- FORM SECTION -->
+        <!-- ========================= -->
+
+        <div class="form-section">
+
+            <div class="form-card">
+
+                <div class="form-header">
+
+                    <div>
+
+                        <h2>
+                            Customer Registration
+                        </h2>
+
+                        <p>
+                            Enter customer details and initialize account setup
+                        </p>
+
+                    </div>
+
+                    <div class="secure-badge">
+                        <i class="bi bi-lock-fill"></i>
+                        Secured
+                    </div>
+
+                </div>
+
+
+
+                <!-- FORM -->
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <!-- BASIC INFO -->
+
+                    <div class="section-title">
+
+                        <div class="section-line"></div>
+
+                        <span>
+                            Personal Information
+                        </span>
+
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="input-box">
+
+                            <label>
+                                First Name
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-person"></i>
+
+                                <input
+                                    type="text"
+                                    name="first_name"
+                                    placeholder="Enter first name"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="input-box">
+
+                            <label>
+                                Last Name
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-person"></i>
+
+                                <input
+                                    type="text"
+                                    name="last_name"
+                                    placeholder="Enter last name"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="input-box">
+
+                            <label>
+                                Username
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-at"></i>
+
+                                <input
+                                    type="text"
+                                    name="username"
+                                    placeholder="Create username"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="input-box">
+
+                            <label>
+                                Email Address
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-envelope"></i>
+
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Enter email address"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="input-box">
+
+                            <label>
+                                Password
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-shield-lock"></i>
+
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="Create strong password"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="input-box">
+
+                            <label>
+                                Phone Number
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-telephone"></i>
+
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    placeholder="+91 XXXXX XXXXX"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ACCOUNT DETAILS -->
+
+                    <div class="section-title mt-4">
+
+                        <div class="section-line"></div>
+
+                        <span>
+                            Banking Details
+                        </span>
+
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="input-box">
+
+                            <label>
+                                Account Type
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-bank"></i>
+
+                                <select name="account_type">
+
+                                    <option value="SAVINGS">
+                                        Savings Account
+                                    </option>
+
+                                    <option value="CURRENT">
+                                        Current Account
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="input-box">
+
+                            <label>
+                                Initial Deposit
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-currency-rupee"></i>
+
+                                <input
+                                    type="number"
+                                    name="balance"
+                                    placeholder="₹ 0.00"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="input-box">
+
+                            <label>
+                                Account Status
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-patch-check"></i>
+
+                                <select name="status">
+
+                                    <option value="ACTIVE">
+                                        Active
+                                    </option>
+
+                                    <option value="FROZEN">
+                                        Frozen
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="input-box">
+
+                            <label>
+                                Transaction PIN
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-key"></i>
+
+                                <input
+                                    type="password"
+                                    name="pin"
+                                    placeholder="4 Digit PIN"
+                                    maxlength="4"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- SUBMIT -->
+
+                    <button type="submit" class="submit-btn">
+
+                        <i class="bi bi-person-check-fill"></i>
+
+                        Create Customer Account
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================= -->
+        <!-- SIDE PANEL -->
+        <!-- ========================= -->
+
+        <div class="side-panel">
+
+            <!-- SECURITY CARD -->
+
+            <div class="side-card">
+
+                <div class="card-top">
+
+                    <div class="mini-icon blue">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Banking Guidelines
+                        </h3>
+
+                        <p>
+                            Secure onboarding protocol
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="guidelines">
+
+                    <div class="guide-item">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        <span>
+                            Verify customer KYC before activation
+                        </span>
+
+                    </div>
+
+                    <div class="guide-item">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        <span>
+                            Ensure phone and email are unique
+                        </span>
+
+                    </div>
+
+                    <div class="guide-item">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        <span>
+                            Savings account requires minimum balance
+                        </span>
+
+                    </div>
+
+                    <div class="guide-item">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        <span>
+                            Account number generated automatically
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- QUICK STATS -->
+
+            <div class="side-card">
+
+                <div class="card-top">
+
+                    <div class="mini-icon green">
+                        <i class="bi bi-bar-chart-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Registration Stats
+                        </h3>
+
+                        <p>
+                            Customer onboarding metrics
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="stats-list">
+
+                    <div class="stats-item">
+
+                        <div>
+                            <h5>
+                                Today's Registrations
+                            </h5>
+
+                            <small>
+                                new customers
+                            </small>
+                        </div>
+
+                        <span>
+                            {{ recent_users|length }}
+                        </span>
+
+                    </div>
+
+                    <div class="stats-item">
+
+                        <div>
+                            <h5>
+                                Verification Status
+                            </h5>
+
+                            <small>
+                                banking compliance
+                            </small>
+                        </div>
+
+                        <span class="green-text">
+                            Active
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RECENT CUSTOMERS -->
+
+            <div class="side-card">
+
+                <div class="recent-header">
+
+                    <div>
+
+                        <h3>
+                            Recent Customers
+                        </h3>
+
+                        <p>
+                            Latest onboarded users
+                        </p>
+
+                    </div>
+
+                    <span class="count-badge">
+                        {{ recent_users|length }}
+                    </span>
+
+                </div>
+
+                {% for customer in recent_users %}
+
+                <div class="recent-user">
+
+                    <div class="user-left">
+
+                        <div class="avatar">
+
+                            {{ customer.user.first_name|slice:":1"|upper }}
+
+                        </div>
+
+                        <div>
+
+                            <h4>
+                                {{ customer.user.first_name }}
+                                {{ customer.user.last_name }}
+                            </h4>
+
+                            <small>
+                                {{ customer.account_number }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <div class="balance">
+
+                        ₹{{ customer.balance }}
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+<style>
+
+/* ========================= */
+/* PAGE */
+/* ========================= */
+
+.add-user-page{
+    padding:10px;
+}
+
+
+
+/* ========================= */
+/* HEADER */
+/* ========================= */
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:32px;
+    gap:20px;
+}
+
+.page-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:#dbeafe;
+    color:#1d4ed8;
+    padding:8px 14px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:18px;
+}
+
+.page-title{
+    font-size:38px;
+    font-weight:700;
+    color:#0f172a;
+    margin-bottom:10px;
+}
+
+.page-subtitle{
+    color:#64748b;
+    font-size:15px;
+    max-width:650px;
+}
+
+.header-actions{
+    display:flex;
+    gap:12px;
+}
+
+.header-btn{
+    border:none;
+    border-radius:16px;
+    padding:13px 18px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.light-btn{
+    background:white;
+    color:#0f172a;
+}
+
+.primary-btn{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:white;
+}
+
+
+
+/* ========================= */
+/* ALERT */
+/* ========================= */
+
+.custom-alert{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:18px;
+    border-radius:18px;
+    margin-bottom:22px;
+    font-size:14px;
+    font-weight:500;
+}
+
+.custom-alert.success{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.custom-alert.error{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.alert-icon{
+    font-size:20px;
+}
+
+
+
+/* ========================= */
+/* GRID */
+/* ========================= */
+
+.main-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:26px;
+}
+
+
+
+/* ========================= */
+/* FORM */
+/* ========================= */
+
+.form-card{
+    background:white;
+    border-radius:28px;
+    padding:35px;
+    box-shadow:0 10px 30px rgba(15,23,42,0.05);
+}
+
+.form-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:35px;
+}
+
+.form-header h2{
+    font-size:28px;
+    margin-bottom:6px;
+    color:#0f172a;
+}
+
+.form-header p{
+    color:#64748b;
+    margin:0;
+}
+
+.secure-badge{
+    background:#dcfce7;
+    color:#15803d;
+    padding:10px 16px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:22px;
+}
+
+.section-line{
+    width:4px;
+    height:20px;
+    border-radius:20px;
+    background:#2563eb;
+}
+
+.section-title span{
+    font-size:16px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:24px;
+}
+
+.input-box{
+    display:flex;
+    flex-direction:column;
+}
+
+.input-box label{
+    margin-bottom:10px;
+    font-size:14px;
+    font-weight:600;
+    color:#374151;
+}
+
+.input-wrapper{
+    position:relative;
+}
+
+.input-wrapper i{
+    position:absolute;
+    top:18px;
+    left:16px;
+    color:#64748b;
+}
+
+.input-wrapper input,
+.input-wrapper select{
+    width:100%;
+    height:56px;
+    border:1px solid #dbe1ea;
+    border-radius:18px;
+    padding:0 18px 0 48px;
+    background:#f8fafc;
+    outline:none;
+    transition:0.3s;
+}
+
+.input-wrapper input:focus,
+.input-wrapper select:focus{
+    border-color:#2563eb;
+    background:white;
+    box-shadow:0 0 0 4px rgba(37,99,235,0.08);
+}
+
+.submit-btn{
+    width:100%;
+    margin-top:36px;
+    height:60px;
+    border:none;
+    border-radius:20px;
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:white;
+    font-size:16px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    transition:0.3s;
+}
+
+.submit-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 24px rgba(37,99,235,0.2);
+}
+
+
+
+/* ========================= */
+/* SIDE PANEL */
+/* ========================= */
+
+.side-panel{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+}
+
+.side-card{
+    background:white;
+    border-radius:28px;
+    padding:28px;
+    box-shadow:0 10px 30px rgba(15,23,42,0.04);
+}
+
+.card-top{
+    display:flex;
+    gap:16px;
+    margin-bottom:24px;
+}
+
+.mini-icon{
+    width:52px;
+    height:52px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:22px;
+}
+
+.mini-icon.blue{
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+}
+
+.mini-icon.green{
+    background:linear-gradient(135deg,#059669,#10b981);
+}
+
+.card-top h3{
+    font-size:20px;
+    margin-bottom:5px;
+}
+
+.card-top p{
+    color:#64748b;
+    font-size:14px;
+    margin:0;
+}
+
+
+
+/* GUIDELINES */
+
+.guidelines{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.guide-item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    font-size:14px;
+    color:#475569;
+    line-height:1.6;
+}
+
+.guide-item i{
+    color:#16a34a;
+    margin-top:3px;
+}
+
+
+
+/* STATS */
+
+.stats-list{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.stats-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stats-item h5{
+    margin-bottom:4px;
+    font-size:15px;
+}
+
+.stats-item small{
+    color:#64748b;
+}
+
+.stats-item span{
+    font-weight:700;
+    color:#2563eb;
+}
+
+.green-text{
+    color:#16a34a !important;
+}
+
+
+
+/* RECENT USERS */
+
+.recent-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.recent-header h3{
+    margin-bottom:4px;
+}
+
+.recent-header p{
+    color:#64748b;
+    font-size:13px;
+    margin:0;
+}
+
+.count-badge{
+    background:#eff6ff;
+    color:#2563eb;
+    padding:8px 14px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.recent-user{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 0;
+    border-bottom:1px solid #f1f5f9;
+}
+
+.recent-user:last-child{
+    border:none;
+}
+
+.user-left{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.avatar{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+}
+
+.user-left h4{
+    font-size:14px;
+    margin-bottom:4px;
+}
+
+.user-left small{
+    color:#64748b;
+}
+
+.balance{
+    color:#16a34a;
+    font-weight:700;
+    font-size:14px;
+}
+
+
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+@media(max-width:1100px){
+
+    .main-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .page-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .form-card,
+    .side-card{
+        padding:24px;
+    }
+
+    .page-title{
+        font-size:30px;
+    }
+
+    .form-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:16px;
+    }
+
+}
+
+</style>
+
+{% endblock %}

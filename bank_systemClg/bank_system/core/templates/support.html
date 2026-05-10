@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+/* PAGE BACKGROUND ACCENT */
+body {
+    background: #f4f7ff;
+}
+
+/* HEADER */
+.support-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.support-header h2 {
+    font-weight: 800;
+    color: #0f172a;
+}
+
+/* KYC BAR */
+.kyc-bar {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: white;
+    border-radius: 14px;
+    padding: 14px 18px;
+}
+
+/* CARDS */
+.support-card {
+    border: none;
+    border-radius: 16px;
+    padding: 5px;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+.support-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.15);
+}
+
+/* BUTTONS */
+.btn-blue {
+    background: #2563eb;
+    color: white;
+    border-radius: 30px;
+    padding: 10px;
+    font-weight: 600;
+}
+
+.btn-blue:hover {
+    background: #1d4ed8;
+}
+
+.btn-outline-blue {
+    border: 1px solid #2563eb;
+    color: #2563eb;
+    border-radius: 30px;
+}
+
+.btn-outline-blue:hover {
+    background: #2563eb;
+    color: white;
+}
+
+/* ACCORDION */
+.accordion-button {
+    font-weight: 600;
+}
+
+.accordion-button:not(.collapsed) {
+    background: #e0eaff;
+    color: #1d4ed8;
+}
+
+.accordion-item {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    border: 1px solid #e5e7eb;
+}
+
+</style>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="support-header">
+        <h2>Customer Support & Services</h2>
+        <p class="text-muted">
+            Manage your banking services and raise secure requests anytime
+        </p>
+    </div>
+
+    <!-- KYC STATUS -->
+    <div class="kyc-bar d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <strong>KYC Status:</strong>
+
+            {% if customer.pan_number and customer.aadhaar_number %}
+                <span>Verified ✅</span>
+            {% else %}
+                <span>Incomplete ⚠️</span>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'profile' %}" class="btn btn-light btn-sm">
+            Update KYC
+        </a>
+
+    </div>
+
+    <!-- SERVICE CARDS -->
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card support-card h-100">
+                <div class="card-body">
+
+                    <h5>💰 Fixed Deposit</h5>
+                    <p class="text-muted small">
+                        Secure investments with guaranteed returns.
+                    </p>
+
+                    <ul class="small text-muted">
+                        <li>Up to 7.5% returns</li>
+                        <li>Flexible tenure</li>
+                        <li>Low risk</li>
+                    </ul>
+
+                    <a href="{% url 'apply_fd' %}" class="btn btn-blue w-100">
+                        Apply Now
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card support-card h-100">
+                <div class="card-body">
+
+                    <h5>🏦 Account Services</h5>
+                    <p class="text-muted small">
+                        Update account settings and manage requests.
+                    </p>
+
+                    <ul class="small text-muted">
+                        <li>Limit updates</li>
+                        <li>Profile changes</li>
+                        <li>Account support</li>
+                    </ul>
+
+                    <a href="{% url 'create_request' %}" class="btn btn-outline-blue w-100">
+                        Raise Request
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card support-card h-100">
+                <div class="card-body">
+
+                    <h5>📩 Help Center</h5>
+                    <p class="text-muted small">
+                        Get support from our banking team.
+                    </p>
+
+                    <ul class="small text-muted">
+                        <li>24–48 hr response</li>
+                        <li>Secure tickets</li>
+                        <li>Email support</li>
+                    </ul>
+
+                    <a href="{% url 'create_request' %}" class="btn btn-outline-blue w-100">
+                        Contact Support
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- POLICIES -->
+    <div class="mt-5">
+
+        <h4 class="fw-bold mb-3">Bank Policies</h4>
+
+        <div class="accordion" id="policyAccordion">
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#interest">
+                        Interest Rates
+                    </button>
+                </h2>
+                <div id="interest" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        Savings: <b>3.5%</b><br>
+                        FD: <b>5% - 7.5%</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#kyc">
+                        KYC Policy
+                    </button>
+                </h2>
+                <div id="kyc" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        PAN and Aadhaar verification is mandatory for full access.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#security">
+                        Security Guidelines
+                    </button>
+                </h2>
+                <div id="security" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        Never share OTP or password. We never ask for credentials.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- REQUESTS -->
+    <div class="text-center mt-5">
+        <a href="{% url 'my_requests' %}" class="btn btn-outline-dark px-4">
+            View My Requests
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

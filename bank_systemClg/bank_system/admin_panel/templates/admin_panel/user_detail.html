@@ -1,0 +1,143 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block content %}
+
+<div class="row">
+
+    <div class="col-lg-4">
+
+        <div class="dashboard-card text-center">
+
+            <div class="admin-avatar mx-auto mb-3"
+                 style="width:90px;height:90px;font-size:34px;">
+
+                {{ customer.user.username|slice:":1"|upper }}
+
+            </div>
+
+            <h3>
+                {{ customer.full_name }}
+            </h3>
+
+            <p class="text-muted">
+                @{{ customer.user.username }}
+            </p>
+
+            <hr>
+
+            <div class="text-start">
+
+                <p>
+                    <strong>Account Number:</strong>
+                    {{ customer.account_number }}
+                </p>
+
+                <p>
+                    <strong>Phone:</strong>
+                    {{ customer.phone }}
+                </p>
+
+                <p>
+                    <strong>PAN:</strong>
+                    {{ customer.pan_number }}
+                </p>
+
+                <p>
+                    <strong>Aadhaar:</strong>
+                    {{ customer.aadhaar_number }}
+                </p>
+
+                <p>
+                    <strong>Balance:</strong>
+                    ₹{{ customer.balance }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-8">
+
+        <div class="dashboard-card">
+
+            <h4 class="mb-4">
+                Transaction History
+            </h4>
+
+            <div class="table-responsive">
+
+                <table class="table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for transaction in transactions %}
+
+                        <tr>
+
+                            <td>
+                                {{ transaction.transaction_type }}
+                            </td>
+
+                            <td>
+                                ₹{{ transaction.amount }}
+                            </td>
+
+                            <td>
+
+                                {% if transaction.status == 'SUCCESS' %}
+
+                                    <span class="badge-success">
+                                        Success
+                                    </span>
+
+                                {% elif transaction.status == 'FAILED' %}
+
+                                    <span class="badge-danger">
+                                        Failed
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge-warning">
+                                        Pending
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                {{ transaction.timestamp }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

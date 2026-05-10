@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+.transfer-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid #e5e7eb;
+}
+
+.balance-box {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+</style>
+
+<div class="row justify-content-center">
+<div class="col-md-5">
+
+<div class="transfer-card shadow-sm">
+
+<h4>Transfer Funds</h4>
+
+<div class="balance-box">
+    <small>Available Balance</small>
+    <h3>₹ {{ customer.balance }}</h3>
+</div>
+
+<label>Account Number</label>
+<input type="text" id="accInput" class="form-control mb-3">
+
+<label>Amount</label>
+<input type="number" id="amtInput" class="form-control mb-3">
+
+<button class="btn btn-primary w-100" onclick="openConfirm()">
+    Review Transfer
+</button>
+
+</div>
+</div>
+</div>
+
+<!-- ✅ MODAL -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+
+      <h5>Confirm Transfer</h5>
+
+      <p><strong>Account:</strong> <span id="accText"></span></p>
+      <p><strong>Amount:</strong> ₹ <span id="amtText"></span></p>
+
+      <form method="post" id="finalForm">
+        {% csrf_token %}
+
+        <input type="hidden" name="account_number" id="finalAcc">
+        <input type="hidden" name="amount" id="finalAmt">
+        <input type="hidden" name="pin" id="finalPin">
+
+        <label>Transaction PIN</label>
+        <input type="password" id="pinInput" class="form-control mb-3">
+
+        <button type="button" class="btn btn-success w-100" onclick="submitTransfer(event)">
+            Confirm & Send
+        </button>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function openConfirm() {
+    let acc = document.getElementById("accInput").value.trim();
+    let amt = document.getElementById("amtInput").value;
+
+    if (!acc || !amt || amt <= 0) {
+        alert("Enter valid details");
+        return;
+    }
+
+    document.getElementById("accText").innerText = acc;
+    document.getElementById("amtText").innerText = amt;
+
+    document.getElementById("finalAcc").value = acc;
+    document.getElementById("finalAmt").value = amt;
+
+    let modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    modal.show();
+
+    setTimeout(() => {
+        document.getElementById("pinInput").focus();
+    }, 300);
+}
+
+function submitTransfer(event) {
+    let btn = event.target;
+    btn.disabled = true;
+
+    let pin = document.getElementById("pinInput").value;
+
+    if (!pin) {
+        alert("Enter PIN");
+        btn.disabled = false;
+        return;
+    }
+
+    document.getElementById("finalPin").value = pin;
+    document.getElementById("finalForm").submit();
+}
+</script>
+
+{% endblock %}

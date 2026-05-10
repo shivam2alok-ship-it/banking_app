@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+.withdraw-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid #e5e7eb;
+}
+
+.balance-box {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: white;
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.quick-btn {
+    border-radius: 25px;
+    font-size: 13px;
+    padding: 6px 14px;
+}
+
+.alert-box {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.warning-box {
+    background: #fff7ed;
+    color: #9a3412;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.success-box {
+    background: #dcfce7;
+    color: #166534;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+
+        <div class="withdraw-card shadow-sm">
+
+            <h4 class="mb-3">Withdraw Funds</h4>
+            <p class="text-muted small mb-3">Withdraw securely from your account</p>
+
+            <!-- BALANCE -->
+            <div class="balance-box">
+                <small>Available Balance</small>
+                <h3 class="mb-0">₹ {{ customer.balance }}</h3>
+            </div>
+
+            <!-- ALERTS -->
+            {% if error %}
+                <div class="alert-box">
+                    ⚠ {{ error }}
+                </div>
+            {% endif %}
+
+            {% if warning %}
+                <div class="warning-box">
+                    {{ warning }}
+                </div>
+            {% endif %}
+
+            {% if success %}
+                <div class="success-box">
+                    ✔ {{ success }}
+                </div>
+            {% endif %}
+
+            <!-- FORM -->
+            <form method="post">
+                {% csrf_token %}
+
+                <label class="form-label">Enter Amount</label>
+                <input 
+                    type="number"
+                    name="amount"
+                    class="form-control mb-3"
+                    placeholder="Minimum ₹100"
+                    min="1"
+                    required
+                >
+
+                <!-- QUICK AMOUNTS -->
+                <div class="mb-3 d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-light border quick-btn" onclick="setAmount(100)">₹100</button>
+                    <button type="button" class="btn btn-light border quick-btn" onclick="setAmount(500)">₹500</button>
+                    <button type="button" class="btn btn-light border quick-btn" onclick="setAmount(1000)">₹1000</button>
+                    <button type="button" class="btn btn-light border quick-btn" onclick="setAmount(2000)">₹2000</button>
+                </div>
+
+                <button class="btn btn-primary w-100">
+                    Withdraw Money
+                </button>
+
+            </form>
+
+            <a href="{% url 'dashboard' %}" class="btn btn-link mt-3 d-block text-center">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+function setAmount(value) {
+    document.querySelector('input[name="amount"]').value = value;
+}
+</script>
+
+{% endblock %}
